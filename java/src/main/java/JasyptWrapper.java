@@ -1,17 +1,22 @@
+import org.apache.commons.cli.*;
+import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import java.security.Security;
-import org.apache.commons.cli.*;
 
 public class JasyptWrapper {
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws Exception {
+        // Add BouncyCastle provider
+        Security.addProvider(new BouncyCastleProvider());
+
         Options options = new Options();
 
-        Option inputOption = new Option("i", "input", true, "Input string to encrypt/decrypt");
+        Option inputOption = new Option("i", "input", true, "Input text");
         inputOption.setRequired(true);
         options.addOption(inputOption);
 
-        Option passwordOption = new Option("p", "password", true, "Password for encryption/decryption");
+        Option passwordOption = new Option("p", "password", true, "Password");
         passwordOption.setRequired(true);
         options.addOption(passwordOption);
 
@@ -19,34 +24,31 @@ public class JasyptWrapper {
         algorithmOption.setRequired(true);
         options.addOption(algorithmOption);
 
-        Option providerOption = new Option("c", "providerClassName", true, "Provider class name");
-        providerOption.setRequired(true);
-        options.addOption(providerOption);
+        Option providerClassOption = new Option("c", "providerClassName", true, "Provider class name");
+        providerClassOption.setRequired(true);
+        options.addOption(providerClassOption);
 
         CommandLineParser parser = new DefaultParser();
-        try {
-            CommandLine cmd = parser.parse(options, args);
-            String input = cmd.getOptionValue("input");
-            String password = cmd.getOptionValue("password");
-            String algorithm = cmd.getOptionValue("algorithm");
-            String providerClassName = cmd.getOptionValue("providerClassName");
+        CommandLine cmd = parser.parse(options, args);
 
-            Security.addProvider(new BouncyCastleProvider());
+        String input = cmd.getOptionValue("input");
+        String password = cmd.getOptionValue("password");
+        String algorithm = cmd.getOptionValue("algorithm");
+        String providerClassName = cmd.getOptionValue("providerClassName");
 
-            StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-            encryptor.setPassword(password);
-            encryptor.setAlgorithm(algorithm);
-            encryptor.setProvider(providerClassName);
+        PBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+        encryptor.setPassword(password);
 
-            if (cmd.hasOption("encrypt")) {
-                String encrypted = encryptor.encrypt(input);
-                System.out.println("Encrypted: " + encrypted);
-            } else if (cmd.hasOption("decrypt")) {
-                String decrypted = encryptor.decrypt(input);
-                System.out.println("Decrypted: " + decrypted);
-            }
-        } catch (ParseException exp) {
-            System.out.println("Error: " + exp.getMessage());
+        // Set the algorithm and provider
+        encryptor.setAlgorithm(algorithm);
+        encryptor.setProvider(new BouncyCastleProvider());
+
+        if ("encrypt".equalsIgnoreCase(cmd.getArgList().get(0))) {
+            String encryptedText = encryptor.encrypt(input);
+            System.out.println("Encrypted: " + encryptedText);
+        } else if ("decrypt".equalsIgnoreCase(cmd.getArgList().get(0))) {
+            String decryptedText = encryptor.decrypt(input);
+            System.out.println("Decrypted: " + decryptedText);
         }
     }
 }
