@@ -23,6 +23,13 @@
             <artifactId>bcprov-jdk15on</artifactId>
             <version>1.68</version>
         </dependency>
+
+        <!-- Commons CLI dependency for command-line argument parsing -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
 
     <build>
