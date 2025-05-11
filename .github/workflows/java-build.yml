@@ -30,7 +30,7 @@ jobs:
 
       # Step 4: Upload JAR as artifact
       - name: Upload JAR as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@main
         with:
           name: jasypt-wrapper
           path: java/target/jasypt-wrapper.jar
