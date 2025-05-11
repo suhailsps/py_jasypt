@@ -21,7 +21,7 @@ jobs:
           mvn clean package
       
       - name: Upload JAR as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: jasypt-wrapper
           path: java/target/jasypt-wrapper.jar
