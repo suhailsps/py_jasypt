@@ -1,5 +1,4 @@
 import org.apache.commons.cli.*;
-import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import java.security.Security;
@@ -34,12 +33,11 @@ public class JasyptWrapper {
         String input = cmd.getOptionValue("input");
         String password = cmd.getOptionValue("password");
         String algorithm = cmd.getOptionValue("algorithm");
-        String providerClassName = cmd.getOptionValue("providerClassName");
 
-        PBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
         encryptor.setPassword(password);
 
-        // Set the algorithm and provider
+        // Set the algorithm and provider using the correct methods
         encryptor.setAlgorithm(algorithm);
         encryptor.setProvider(new BouncyCastleProvider());
 
