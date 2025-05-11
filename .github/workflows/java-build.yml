@@ -17,7 +17,10 @@ jobs:
           distribution: temurin  # required field
 
       - name: Build with Maven
-        run: mvn -f java/pom.xml clean package
+        run: |
+          mvn -f java/pom.xml clean package
+          echo ":: Listing target directory"
+          ls -la java/target
       
       - name: Upload JAR as artifact
         uses: actions/upload-artifact@main
